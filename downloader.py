@@ -20,8 +20,12 @@ def getImages(galleryUrl,title,iteration,total):
     while flag:
         response = requests.get(galleryUrl+"/"+str(i)+".jpg")
         if response.status_code!=200:
-            flag = False
-            break
+            response = requests.get(galleryUrl+"/"+str(i)+".png")
+            if response.status_code!=200:
+                response = requests.get(galleryUrl+"/"+str(i)+".gif")
+                if response.status_code!=200:
+                    flag = False
+                    break
         printProgressBar(iteration, total, i, title)
         pathlib.Path("downloaded/"+slugify(title)).mkdir(parents=True, exist_ok=True)
         file = open("downloaded/"+slugify(title)+"/"+str(i)+".jpg", "wb+")
